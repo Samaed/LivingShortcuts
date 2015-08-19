@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LivingShortcuts</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="validate">Ok</string>
+    <string name="list_application_title">Select an application</string>
+</resources>
