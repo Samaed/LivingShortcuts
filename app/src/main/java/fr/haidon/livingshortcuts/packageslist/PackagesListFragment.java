@@ -51,6 +51,9 @@ public class PackagesListFragment extends DialogFragment {
         List<PackageInfoModel> models = new ArrayList<>();
 
         final PackageManager packageManager = getActivity().getPackageManager();
+
+        // TODO load the list at the start of the activity maybe
+
         List<PackageInfo> packages = packageManager.getInstalledPackages(PackageManager.GET_META_DATA);
 
         for (PackageInfo p : packages) {

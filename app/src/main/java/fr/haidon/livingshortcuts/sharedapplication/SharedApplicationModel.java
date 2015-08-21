@@ -7,11 +7,6 @@ import fr.haidon.livingshortcuts.packageslist.PackageInfoModel;
 
 public class SharedApplicationModel extends Observable {
 
-    public enum Type {
-        ASSOCIATION_CHANGED,
-        ITEM_FOCUSED
-    }
-
     // TODO change the String part for the vuforia model if able to
     private HashMap<String, PackageInfoModel> associationTable;
     private String focusedItem;
@@ -26,7 +21,7 @@ public class SharedApplicationModel extends Observable {
 
         associationTable.put(focusedItem, packageModel);
         setChanged();
-        notifyObservers(Type.ASSOCIATION_CHANGED);
+        notifyObservers();
     }
 
     public PackageInfoModel getAssociatedPackage() {
@@ -41,7 +36,7 @@ public class SharedApplicationModel extends Observable {
     public void setFocusedItem(String value) {
         focusedItem = value;
         setChanged();
-        notifyObservers(Type.ITEM_FOCUSED);
+        notifyObservers();
     }
 
     public void clear() {

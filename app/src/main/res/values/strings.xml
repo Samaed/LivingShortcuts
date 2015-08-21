@@ -6,4 +6,5 @@
     <string name="cancel">Cancel</string>
     <string name="validate">Ok</string>
     <string name="list_application_title">Select an application</string>
+    <string name="icon_name">camera</string>
 </resources>

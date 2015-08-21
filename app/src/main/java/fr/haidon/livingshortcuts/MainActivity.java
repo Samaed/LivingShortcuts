@@ -1,16 +1,16 @@
 package fr.haidon.livingshortcuts;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 import fr.haidon.livingshortcuts.packageslist.PackageInfoModel;
 import fr.haidon.livingshortcuts.packageslist.PackagesListFragment;
@@ -27,43 +27,15 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void update(Observable observable, Object data) {
-        if (observable != null && data != null) {
-            SharedApplicationModel.Type message = (SharedApplicationModel.Type) data;
+        if (observable != null) {
             SharedApplicationModel model = (SharedApplicationModel) observable;
+            PackageInfoModel packageModel = model.getAssociatedPackage();
 
-            if (message == SharedApplicationModel.Type.ITEM_FOCUSED) {
-                if (model.getFocusedItem() != null)
-                    Log.d("ItemFocusedReceived", model.getFocusedItem());
-                else
-                    Log.d("ItemFocusedLost",":'(");
-            } else if (message == SharedApplicationModel.Type.ASSOCIATION_CHANGED) {
-                // TODO do association changed stuff (update UI)
-            }
-
-            findViewById(R.id.button_validate).setVisibility(model.getAssociatedPackage() != null ? View.VISIBLE : View.INVISIBLE);
+            // TODO do association changed stuff (update 3D UI)
+            ((ImageView)findViewById(R.id.icon_validate)).setImageDrawable(packageModel != null ? packageModel.icon : null);
+            if (packageModel != null) Toast.makeText(this, String.format("%s associated", packageModel.label), Toast.LENGTH_SHORT).show();
+            findViewById(R.id.icon_validate).setVisibility(packageModel != null ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
@@ -73,29 +45,29 @@ public class MainActivity extends AppCompatActivity implements Observer {
         startActivity(getPackageManager().getLaunchIntentForPackage(model.name));
     }
 
-    public void debugFocus(View item) {
-        SharedApplication app = (SharedApplication) getApplication();
-
-        Log.d("DebugPushed","Test");
-
-        if (app.getFocusedItem() == null)
-            app.setFocusedItem("item");
-        else
-            app.setFocusedItem(null);
-    }
-
-    public void displayFragment(View item) {
-
+    public void associate(View item) {
         SharedApplication application = (SharedApplication) getApplication();
 
         if (application.getFocusedItem() != null) {
-            Fragment fragment = new PackagesListFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(fragment, "list_fragment");
-            transaction.commit();
+            displayFragment();
         } else {
             // TODO try to get an item focused on vuforia side
             // If so, update the application focused item
+            String scannedItem = (new Random().nextBoolean()) ? null : "ItemFocused";
+
+            application.setFocusedItem(scannedItem);
+
+            if (scannedItem == null)
+                Toast.makeText(this, "Missing details on the model", Toast.LENGTH_SHORT).show();
+            else
+                displayFragment();
         }
+    }
+
+    public void displayFragment() {
+        Fragment fragment = new PackagesListFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(fragment, "list_fragment");
+        transaction.commit();
     }
 }
