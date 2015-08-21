@@ -1,53 +1,54 @@
-package fr.haidon.livingshortcuts;
+package fr.haidon.livingshortcuts.packageslist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListApplicationsFragment extends DialogFragment {
+import fr.haidon.livingshortcuts.R;
+import fr.haidon.livingshortcuts.sharedapplication.SharedApplication;
 
-    private ApplicationListAdapter listAdapter;
+public class PackagesListFragment extends DialogFragment {
+
+    private PackagesListAdapter listAdapter;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        // TODO get the sharedapplication item and if associated already, hightlight the right thing or something like that
+
         listAdapter = createAdapter();
 
         builder.setTitle(R.string.list_application_title)
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
+                // User cancelled the dialog
                 }
             })
             .setAdapter(listAdapter, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
-                    ApplicationListModel item = listAdapter.getItem(id);
-                    Toast.makeText(getActivity(), item.label + " selected", Toast.LENGTH_LONG).show();
-
-                    // TODO change the test to the association in memory of the item.name
-                    // To test the application we will launch the package
-                    getActivity().startActivity(getActivity().getPackageManager().getLaunchIntentForPackage(item.name));
+                PackageInfoModel item = listAdapter.getItem(id);
+                SharedApplication application = (SharedApplication) getActivity().getApplication();
+                application.setAssociatedPackage(item);
                 }
             });
 
         return builder.create();
     }
 
-    private ApplicationListAdapter createAdapter() {
-        List<ApplicationListModel> models = new ArrayList<>();
+    private PackagesListAdapter createAdapter() {
+        List<PackageInfoModel> models = new ArrayList<>();
 
         final PackageManager packageManager = getActivity().getPackageManager();
         List<PackageInfo> packages = packageManager.getInstalledPackages(PackageManager.GET_META_DATA);
@@ -55,9 +56,9 @@ public class ListApplicationsFragment extends DialogFragment {
         for (PackageInfo p : packages) {
             // TODO correct the flag part
             if ((p.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0)
-                models.add(new ApplicationListModel(p.applicationInfo.loadLabel(packageManager).toString(), p.packageName, p.applicationInfo.loadIcon(packageManager)));
+                models.add(new PackageInfoModel(p.applicationInfo.loadLabel(packageManager).toString(), p.packageName, p.applicationInfo.loadIcon(packageManager)));
         }
 
-        return new ApplicationListAdapter(getActivity(), models);
+        return new PackagesListAdapter(getActivity(), models);
     }
 }

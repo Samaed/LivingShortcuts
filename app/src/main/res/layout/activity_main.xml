@@ -12,11 +12,32 @@
     <at.markushi.ui.CircleButton
         android:layout_width="64dip"
         android:layout_height="64dip"
+        app:cb_color="#AAA"
+        app:cb_pressedRingWidth="8dip"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/debug_focus"
+        android:onClick="debugFocus" />
+
+    <at.markushi.ui.CircleButton
+        android:layout_width="64dip"
+        android:layout_height="64dip"
+        app:cb_color="#CC3300"
+        app:cb_pressedRingWidth="8dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="false"
+        android:id="@+id/button_associate"
+        android:onClick="displayFragment" />
+
+    <at.markushi.ui.CircleButton
+        android:layout_width="64dip"
+        android:layout_height="64dip"
         app:cb_color="#99CC00"
         app:cb_pressedRingWidth="8dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:id="@+id/button_validate"
-        android:onClick="displayFragment" />
+        android:onClick="startApplication"
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -1,7 +1,6 @@
-package fr.haidon.livingshortcuts;
+package fr.haidon.livingshortcuts.packageslist;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class ApplicationListAdapter extends ArrayAdapter<ApplicationListModel> {
+import fr.haidon.livingshortcuts.R;
 
-    public ApplicationListAdapter(Context context, List<ApplicationListModel> values) {
+public class PackagesListAdapter extends ArrayAdapter<PackageInfoModel> {
+
+    public PackagesListAdapter(Context context, List<PackageInfoModel> values) {
         super(context, -1, values);
     }
 
